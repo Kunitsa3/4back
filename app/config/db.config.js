@@ -1,8 +1,8 @@
 module.exports = {
-  HOST: process.env.CLEARDB_DATABASE_URL || 'localhost',
+  HOST: process.env.CLEARDB_DATABASE_HOST || 'localhost',
   USER: process.env.CLEARDB_DATABASE_USER || 'root',
   PASSWORD: process.env.CLEARDB_DATABASE_PASSWORD || 'root',
-  DB: 'testdb',
+  DB: process.env.CLEARDB_DATABASE_DB || 'testdb',
   dialect: 'mysql',
   pool: {
     max: 5,
