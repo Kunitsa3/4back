@@ -7,7 +7,7 @@ var corsOptions = {
   origin: process.env.CORS_URL || 'http://localhost:3000',
 };
 
-app.use(cors(corsOptions));
+app.use(cors());
 const db = require('./app/models');
 db.sequelize.sync();
 
