@@ -1,5 +1,5 @@
 module.exports = {
-  HOST: 'localhost',
+  HOST: process.env.CLEARDB_DATABASE_URL || 'localhost',
   USER: 'root',
   PASSWORD: 'root',
   DB: 'testdb',
