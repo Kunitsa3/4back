@@ -25,7 +25,7 @@ exports.register = async (req, res) => {
 
   Users.create(user)
     .then(data => {
-      const token = jwt.sign({ _id: data.id }, 'PrivateKey');
+      const token = jwt.sign({ _id: data.id }, process.env.PRIVATE_JWT_KEY || 'PrivateKey');
       res.send(JSON.stringify(token));
     })
     .catch(err => {
@@ -77,7 +77,7 @@ exports.login = async (req, res) => {
   if (!validPassword) {
     return res.status(401).send('Incorrect email or password.');
   }
-  const token = jwt.sign({ _id: user.id }, 'PrivateKey');
+  const token = jwt.sign({ _id: user.id }, process.env.PRIVATE_JWT_KEY || 'PrivateKey');
   res.send(JSON.stringify(token));
 };
 
