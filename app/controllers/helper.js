@@ -14,7 +14,7 @@ exports.checkIfNotLoggedIn = async (req, res) => {
   let key = null;
 
   try {
-    key = jwt.verify(req.headers.authorization, 'PrivateKey');
+    key = jwt.verify(req.headers.authorization, process.env.PRIVATE_JWT_KEY || 'PrivateKey');
   } catch {
     res.status(401).send({
       message: 'You are not authorized',
