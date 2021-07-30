@@ -12,6 +12,20 @@ exports.register = async (req, res) => {
     return;
   }
 
+  const existingUser = await Users.findOne({
+    where: {
+      email: req.body.email,
+    },
+  });
+
+  if (existingUser) {
+    res.status(400).send({
+      message: 'User with this email already exist',
+    });
+
+    return;
+  }
+
   const user = {
     name: req.body.name,
     password: req.body.password,
@@ -61,21 +75,36 @@ exports.findAll = async (req, res) => {
 
 exports.login = async (req, res) => {
   const user = await Users.findOne({
-    email: req.body.email,
+    where: {
+      email: req.body.email,
+    },
   });
 
-  if (user.status === 'blocked') {
-    res.status(400).send('This user blocked');
+  if (!(req.body.password && req.body.email)) {
+    return res.status(401).send({
+      message: 'Incorrect email or password.',
+    });
+  }
+
+  if (!user) {
+    res.status(400).send({
+      message: 'User does not exist',
+    });
     return;
   }
 
-  if (!(req.body.password && req.body.email)) {
-    return res.status(401).send('Incorrect email or password.');
+  if (user.status === 'blocked') {
+    res.status(400).send({
+      message: 'This user blocked',
+    });
+    return;
   }
 
   const validPassword = await bcrypt.compare(req.body.password, user.password);
   if (!validPassword) {
-    return res.status(401).send('Incorrect email or password.');
+    return res.status(401).send({
+      message: 'Incorrect email or password.',
+    });
   }
   const token = jwt.sign({ _id: user.id }, process.env.PRIVATE_JWT_KEY || 'PrivateKey');
   res.send(JSON.stringify(token));
